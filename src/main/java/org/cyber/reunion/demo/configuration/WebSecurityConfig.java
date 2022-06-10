@@ -21,22 +21,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private JwtTokenProvider jwtTokenProvider = new JwtTokenProvider();
 	private static final String[] AUTH_WHITELIST = { "/authenticate", "/swagger-resources/**", "/swagger-ui/**",
-			"/v3/api-docs", "/webjars/**" };
+			"/v3/api-docs", "/webjars/**", "/bus/v3/api-docs/**" };
 
-//  private static final String[] WHITELIST = {
-//	        "/v2/api-docs",
-//	        "/v3/api-docs",
-//	        "/**/v3/api-docs",
-//	        "/swagger-resources",
-//	        "/swagger-resources/**",
-//	        "/configuration/ui",
-//	        "/configuration/security",
-//	        "/swagger-ui.html",
-//	        "**/swagger-ui.html",
-//	        "/**/swagger-ui.html**",
-//	        "/swagger-ui.html**",
-//	        "/webjars/**"
-//	};
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 
@@ -51,7 +37,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/users/signin").permitAll()//
 				.antMatchers("/users/signup").permitAll()//
 				.antMatchers("/h2-console/**/**").permitAll()//
-				.antMatchers(AUTH_WHITELIST).permitAll()//
 				.anyRequest()//
 				.authenticated();
 
@@ -79,7 +64,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		// Un-secure H2 Database (for testing purposes, H2 console shouldn't be
 		// unprotected in production)
 		web.ignoring()//
-				.antMatchers("/h2-console/**/**");
+				.antMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html","/h2-console/**/**");
 		;
 	}
 
