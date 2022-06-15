@@ -5,7 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.cyber.reunion.demo.dto.UserDataDTO;
 import org.cyber.reunion.demo.dto.UserResponseDTO;
 import org.cyber.reunion.demo.models.AppUser;
-import org.cyber.reunion.demo.security.UserDetailsServiceImpl;
+import org.cyber.reunion.demo.security.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -31,7 +31,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public class UserController {
 
 	@Autowired
-	private UserDetailsServiceImpl userService;
+	private UserService userService;
 	@Autowired
 	private ModelMapper modelMapper;
 

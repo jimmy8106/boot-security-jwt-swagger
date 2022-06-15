@@ -1,5 +1,9 @@
 package org.cyber.reunion.demo.configuration;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.cyber.reunion.demo.security.JwtTokenFilterConfigurer;
 import org.cyber.reunion.demo.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +22,17 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+	private JwtTokenProvider jwtTokenProvider;
+	
 	@Autowired
-	private JwtTokenProvider jwtTokenProvider = new JwtTokenProvider();
-	private static final String[] AUTH_WHITELIST = { "/authenticate", "/swagger-resources/**", "/swagger-ui/**",
-			"/v3/api-docs", "/webjars/**", "/bus/v3/api-docs/**" };
+	public void setJwtTokenProvider(JwtTokenProvider jwtTokenProvider) {
+		this.jwtTokenProvider = jwtTokenProvider;
+	}
+	
+	private static final String[] AUTH_ALLOWLIST = {"/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html"};
 
+	private static String H2_RESOURCE = "/h2-console/**/**";
+	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 
@@ -52,19 +62,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	public void configure(WebSecurity web) throws Exception {
-		// Allow swagger to be accessed without authentication
-//    web.ignoring().antMatchers("/v2/api-docs")//
-//        .antMatchers("/swagger-resources/**")//
-//        .antMatchers("/swagger-ui.html")//
-//        .antMatchers("/configuration/**")//
-//        .antMatchers("/webjars/**")//
-//        .antMatchers("/public")
-//	  web.ignoring().anyRequest();
-
 		// Un-secure H2 Database (for testing purposes, H2 console shouldn't be
 		// unprotected in production)
+		List<String> allowList = new ArrayList<>();
+		allowList.addAll(Arrays.asList(AUTH_ALLOWLIST));
+		allowList.add(H2_RESOURCE);
+		
 		web.ignoring()//
-				.antMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html","/h2-console/**/**");
+				.antMatchers(allowList.stream().toArray(String[]::new));
 		;
 	}
 

@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.cyber.reunion.demo.exception.CustomException;
 import org.cyber.reunion.demo.models.AppUserRole;
+import org.cyber.reunion.demo.repository.AppUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -35,7 +36,7 @@ public class JwtTokenProvider {
 	private long validityInMilliseconds = 3600000; // 1h
 
 	@Autowired
-	private UserDetailsServiceImpl userService;
+	private UserDetailsServiceImpl  userDetailsService;
 
 	@PostConstruct
 	protected void init() {
@@ -59,7 +60,7 @@ public class JwtTokenProvider {
 	}
 
 	public Authentication getAuthentication(String token) {
-		UserDetails userDetails = userService.loadUserByUsername(getUsername(token));
+		UserDetails userDetails = userDetailsService.loadUserByUsername(getUsername(token));
 		return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
 	}
 
